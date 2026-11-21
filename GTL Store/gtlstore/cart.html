@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GTL Store — Cart</title>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────── -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">GTL<em>.</em></a>
+  <div class="nav-center">
+    <a href="index.html"      class="nav-link">Home</a>
+    <a href="index.html#shop" class="nav-link">Shop</a>
+    <a href="track-order.html" class="nav-link">Track Order</a>
+    <a href="cart.html"       class="nav-link active">Cart</a>
+  </div>
+  <div class="nav-right">
+    <!-- Wishlist -->
+    <a href="cart.html#wishlist" class="nav-cart nav-wishlist" aria-label="Wishlist" title="View Wishlist">
+      <i class="fas fa-heart"></i> <span class="wishlist-badge" aria-live="polite">0</span>
+    </a>
+    <!-- Cart -->
+    <a href="cart.html" class="nav-cart" aria-label="Shopping cart">
+      <i class="fas fa-shopping-bag"></i> <span class="cart-badge">0</span>
+    </a>
+    <!-- Prominent Theme toggle -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+      <i class="fas fa-moon"></i><span class="theme-toggle-label">Dark</span>
+    </button>
+    <a href="login.html" class="nav-login-btn nav-login-link" id="nav-login-link">Login</a>
+    <div class="nav-user-widget hidden" id="nav-user-widget">
+      <div class="nav-avatar" id="nav-avatar">[ G ]</div>
+      <button class="btn-ghost-sm" id="nav-logout-btn">Logout</button>
+    </div>
+    <button class="burger" id="burger-btn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-overlay" id="mobile-overlay"></div>
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="index.html"       class="nav-link">Home</a>
+  <a href="index.html#shop"  class="nav-link">Shop</a>
+  <a href="track-order.html" class="nav-link">Track Order</a>
+  <a href="cart.html"        class="nav-link">Cart</a>
+  <a href="login.html"       class="nav-link">Login / Account</a>
+</nav>
+
+<!-- ── CART CONTENT ──────────────────────────────────────── -->
+<div id="cart-root"></div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section footer-section-brand">
+      <div class="footer-logo">GTL<em>.</em></div>
+      <p class="footer-desc">Premium streetwear from Accra</p>
+    </div>
+    <div class="footer-section footer-section-links">
+      <div>
+        <p class="footer-heading">Navigate</p>
+        <nav class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="index.html#shop">Shop</a>
+          <a href="cart.html">Cart</a>
+        </nav>
+      </div>
+      <div>
+        <p class="footer-heading">Contact</p>
+        <div class="footer-contact">
+          <a href="mailto:gtlbrand926@gmail.com" style="font-size:.85rem;color:var(--text-2);transition:color var(--transition);text-decoration:none"><i class="fas fa-envelope" style="margin-right:.4rem"></i>gtlbrand926@gmail.com</a>
+          <a href="https://wa.me/233545089499" target="_blank" rel="noopener noreferrer" style="font-size:.85rem;color:var(--text-2);transition:color var(--transition);text-decoration:none"><i class="fas fa-phone" style="margin-right:.4rem"></i>+233 24 518 4337</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-section footer-section-social">
+      <p class="footer-heading">Follow</p>
+      <div class="footer-social">
+        <a href="https://wa.me/233545089499" target="_blank" rel="noopener noreferrer" title="WhatsApp" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/gtl_brand?igsh=MXFtcjJvYXQ2ODJ3YQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" title="Instagram" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@gtl_brand?_r=1&_t=ZS-94gJl7TErtl" target="_blank" rel="noopener noreferrer" title="TikTok" class="social-icon"><i class="fab fa-tiktok"></i></a>
+        <a href="https://youtube.com/@gtlbrand?si=GMXAETGsE1z_k4t8SS" target="_blank" rel="noopener noreferrer" title="YouTube" class="social-icon"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="footer-bottom"><p>© 2026 GTL Brand, Accra.</p></div>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+<script type="module">
+  import { auth, db, getCart, saveCart, removeFromCart, updateQty, clearCart, cartTotal, updateCartBadge, showToast, getWishlist, toggleWishlist, addToCart, updateWishlistBadge } from "./js/firebase.js";
+  import { onAuthStateChanged }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import "./js/app.js";
+
+  const root = document.getElementById("cart-root");
+  let currentUser = null;
+
+  onAuthStateChanged(auth, user => { currentUser = user; });
+
+  // ── RENDER CART & WISHLIST ───────────────────────────────
+  function renderCart() {
+    const cart = getCart();
+    const wishlist = getWishlist();
+    updateCartBadge();
+    updateWishlistBadge();
+
+    const wishlistHTML = `
+      <div id="wishlist" style="margin-top:4rem;padding-top:2.5rem;border-top:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+          <div>
+            <h2 style="font-size:1.5rem;display:flex;align-items:center;gap:.5rem"><i class="fas fa-heart" style="color:#ff4b4b"></i> My Wishlist</h2>
+            <p style="color:var(--text-2);font-size:.85rem;margin-top:.2rem">${wishlist.length} saved item${wishlist.length !== 1 ? 's' : ''}</p>
+          </div>
+        </div>
+
+        ${wishlist.length === 0 ? `
+          <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:2.5rem 1rem;text-align:center;color:var(--text-2)">
+            <p>Your wishlist is currently empty. Tap the ❤️ icon on any product to save it for later!</p>
+          </div>
+        ` : `
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem">
+            ${wishlist.map(item => `
+              <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:1rem;display:flex;flex-direction:column;gap:.75rem">
+                <img src="${item.imageURL}" alt="${item.name}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r)"/>
+                <div style="flex:1">
+                  <p style="font-size:.75rem;color:var(--text-3);text-transform:uppercase">${item.category || 'GTL'}</p>
+                  <p style="font-weight:600;font-size:.95rem;margin-top:.1rem">${item.name}</p>
+                  <p style="color:var(--brand);font-weight:700;margin-top:.2rem">₵${item.price}</p>
+                </div>
+                <div style="display:flex;gap:.5rem">
+                  <button class="btn btn-primary btn-sm move-to-cart-btn" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}" data-cat="${item.category || ''}" data-img="${item.imageURL}" data-desc="${item.description}" style="flex:1;font-size:.78rem">
+                    + Move to Cart
+                  </button>
+                  <button class="btn btn-outline btn-sm remove-wishlist-btn" data-id="${item.id}" data-name="${item.name}" title="Remove" style="padding:.4rem .6rem">
+                    ✕
+                  </button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `}
+      </div>
+    `;
+
+    if (cart.length === 0) {
+      root.innerHTML = `
+        <div class="cart-layout" style="display:block">
+          <div class="cart-empty" style="padding:4rem 1rem 2rem;text-align:center">
+            <div class="cart-empty__icon" style="font-size:3rem;margin-bottom:1rem;color:var(--text-3)"><i class="fas fa-shopping-cart"></i></div>
+            <h2>Your cart is empty</h2>
+            <p style="color:var(--text-2);margin-top:.4rem">Looks like you haven't added anything yet.</p>
+            <a href="index.html#shop" class="btn btn-primary" style="margin-top:1.25rem">Start Shopping</a>
+          </div>
+          ${wishlistHTML}
+        </div>`;
+    } else {
+      const subtotal  = cartTotal(cart);
+      const total     = subtotal;
+
+      root.innerHTML = `
+        <div class="cart-layout">
+          <!-- Left: items -->
+          <div>
+            <h1 class="cart-title">My Cart</h1>
+            <p class="cart-count">${cart.reduce((s,i)=>s+i.qty,0)} item${cart.reduce((s,i)=>s+i.qty,0)!==1?'s':''}</p>
+            <div id="cart-items-list">
+              ${cart.map(item => `
+                <div class="cart-item" data-id="${item.id}">
+                  <img class="cart-item__img" src="${item.imageURL}" alt="${item.name}" loading="lazy"/>
+                  <div>
+                    <p class="cart-item__cat">${item.category || 'GTL'}</p>
+                    <p class="cart-item__name">${item.name}</p>
+                    <p class="cart-item__price">₵${item.price}</p>
+                    <div class="qty-control" style="margin-top:.6rem">
+                      <button class="qty-btn" data-action="minus" data-id="${item.id}" aria-label="Decrease">−</button>
+                      <span class="qty-display">${item.qty}</span>
+                      <button class="qty-btn" data-action="plus"  data-id="${item.id}" aria-label="Increase">+</button>
+                    </div>
+                  </div>
+                  <div class="cart-item__right">
+                    <span class="cart-item__line-total">₵${(item.price * item.qty).toLocaleString()}</span>
+                    <button class="cart-remove" data-id="${item.id}" aria-label="Remove item">✕ Remove</button>
+                  </div>
+                </div>`).join("")}
+            </div>
+            <div style="margin-top:1.5rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
+              <a href="index.html#shop" class="btn btn-outline btn-sm">← Continue Shopping</a>
+              <button class="btn btn-dark btn-sm" id="clear-cart-btn">Clear Cart</button>
+            </div>
+          </div>
+
+          <!-- Right: summary -->
+          <aside class="order-summary">
+            <h2>Order Summary</h2>
+            <div class="summary-row"><span>Subtotal</span><span>₵${subtotal.toLocaleString()}</span></div>
+            <div class="summary-total">
+              <span>Total</span>
+              <span class="summary-total-price">₵${total.toLocaleString()}</span>
+            </div>
+            <a href="checkout.html" class="btn btn-primary btn-full btn-lg" style="display:inline-flex;width:100%;justify-content:center">
+              Proceed to Checkout &rarr;
+            </a>
+            <p style="font-size:.72rem;color:var(--text-3);text-align:center;margin-top:.75rem">
+              🔒 Secure checkout · Orders saved to Firebase
+            </p>
+          </aside>
+        </div>
+        ${wishlistHTML}`;
+    }
+
+    // Bind events once on root container
+  }
+
+  // ── DELEGATED EVENT LISTENERS (ATTACHED ONCE) ──────────────────────────
+  root.addEventListener("click", e => {
+    // Qty and remove from Cart
+    const btn = e.target.closest("[data-id]");
+    if (btn) {
+      const id = btn.dataset.id;
+      if (btn.classList.contains("qty-btn")) {
+        const delta = btn.dataset.action === "plus" ? 1 : -1;
+        updateQty(id, delta);
+        renderCart();
+        return;
+      }
+      if (btn.classList.contains("cart-remove")) {
+        removeFromCart(id);
+        renderCart();
+        showToast("Item removed from cart", "info");
+        return;
+      }
+    }
+
+    // Wishlist events
+    const moveBtn = e.target.closest(".move-to-cart-btn");
+    if (moveBtn) {
+      const product = {
+        id: moveBtn.dataset.id,
+        name: moveBtn.dataset.name,
+        price: Number(moveBtn.dataset.price),
+        category: moveBtn.dataset.cat,
+        imageURL: moveBtn.dataset.img,
+        description: moveBtn.dataset.desc
+      };
+      addToCart(product);
+      toggleWishlist(product); // remove from wishlist after moving to cart
+      renderCart();
+      return;
+    }
+
+    const removeWishBtn = e.target.closest(".remove-wishlist-btn");
+    if (removeWishBtn) {
+      toggleWishlist({ id: removeWishBtn.dataset.id, name: removeWishBtn.dataset.name });
+      renderCart();
+      return;
+    }
+
+    // Clear cart
+    const clearBtn = e.target.closest("#clear-cart-btn");
+    if (clearBtn) {
+      if (confirm("Clear your entire cart?")) { clearCart(); renderCart(); }
+      return;
+    }
+  });
+
+  // Kick off
+  renderCart();
+</script>
+</body>
+</html>

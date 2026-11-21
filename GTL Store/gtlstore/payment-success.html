@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GTL Store — Payment Successful</title>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .success-container {
+      min-height: calc(100vh - var(--nav-h));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .success-card {
+      max-width: 600px;
+      width: 100%;
+      background: var(--dark-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 5rem;
+      color: var(--success);
+      margin-bottom: 1.5rem;
+      animation: successPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .success-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .success-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-2);
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 540px) {
+      .success-container { padding: 1.5rem 1rem; }
+      .success-card { padding: 1.75rem 1.25rem; }
+      .success-title { font-size: 1.5rem; }
+      .success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+      .success-actions { flex-direction: column; width: 100%; }
+      .success-actions .btn { width: 100%; }
+    }
+
+    .success-details {
+      background: var(--dark-3, var(--bg-3));
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      text-align: left;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .detail-value {
+      font-weight: 600;
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+    }
+
+    .detail-value.success {
+      color: var(--success);
+    }
+
+    .detail-value.amount {
+      font-size: 1.4rem;
+      color: var(--brand);
+      font-family: var(--font-h);
+    }
+
+    .success-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-direction: column;
+    }
+
+    .success-actions button,
+    .success-actions a {
+      padding: 1rem;
+      border-radius: var(--r-lg);
+      font-weight: 600;
+      transition: all var(--transition);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-primary-success {
+      background: var(--brand);
+      color: #000;
+    }
+
+    .btn-primary-success:hover {
+      background: var(--brand-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(204, 255, 0, 0.3);
+    }
+
+    .btn-outline-success {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline-success:hover {
+      background: var(--bg-3);
+      border-color: var(--text-2);
+    }
+
+    .info-box {
+      background: rgba(41, 182, 246, 0.1);
+      border: 1px solid rgba(41, 182, 246, 0.3);
+      border-radius: var(--r-lg);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #90caf9;
+    }
+
+    .loading-skeleton {
+      animation: skeleton 1.5s infinite;
+    }
+
+    @keyframes successPulse {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes skeleton {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .success-card {
+        padding: 2rem 1rem;
+      }
+
+      .success-icon {
+        font-size: 4rem;
+      }
+
+      .success-title {
+        font-size: 1.5rem;
+      }
+
+      .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .detail-value {
+        width: 100%;
+        text-align: right;
+      }
+
+      .success-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────── -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">GTL<em>.</em></a>
+  <div class="nav-center">
+    <a href="index.html"      class="nav-link">Home</a>
+    <a href="index.html#shop" class="nav-link">Shop</a>
+    <a href="track-order.html" class="nav-link">Track Order</a>
+    <a href="cart.html"       class="nav-link">Cart</a>
+  </div>
+  <div class="nav-right">
+    <!-- Wishlist -->
+    <a href="cart.html#wishlist" class="nav-cart nav-wishlist" aria-label="Wishlist" title="View Wishlist">
+      <i class="fas fa-heart"></i> <span class="wishlist-badge" aria-live="polite">0</span>
+    </a>
+    <!-- Cart -->
+    <a href="cart.html" class="nav-cart" aria-label="Shopping cart">
+      <i class="fas fa-shopping-bag"></i> <span class="cart-badge">0</span>
+    </a>
+    <!-- Prominent Theme toggle -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+      <i class="fas fa-moon"></i><span class="theme-toggle-label">Dark</span>
+    </button>
+    <a href="login.html" class="nav-login-btn nav-login-link" id="nav-login-link">Login</a>
+    <div class="nav-user-widget hidden" id="nav-user-widget">
+      <div class="nav-avatar" id="nav-avatar">[ G ]</div>
+      <button class="btn-ghost-sm" id="nav-logout-btn">Logout</button>
+    </div>
+    <button class="burger" id="burger-btn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-overlay" id="mobile-overlay"></div>
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="index.html"       class="nav-link">Home</a>
+  <a href="index.html#shop"  class="nav-link">Shop</a>
+  <a href="track-order.html" class="nav-link">Track Order</a>
+  <a href="cart.html"        class="nav-link">Cart</a>
+  <a href="login.html"       class="nav-link">Login / Account</a>
+</nav>
+
+<!-- ── SUCCESS CONTENT ───────────────────────────────────── -->
+<div class="success-container">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <h1 class="success-title">Payment Successful!</h1>
+    <p class="success-subtitle">Your order has been confirmed and payment received.</p>
+
+    <div class="success-details">
+      <div class="detail-row">
+        <span class="detail-label">Order ID</span>
+        <span class="detail-value" id="order-id">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Transaction Ref</span>
+        <span class="detail-value" id="transaction-ref">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Payment Method</span>
+        <span class="detail-value" id="payment-method">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Status</span>
+        <span class="detail-value success">✓ Completed</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Amount Paid</span>
+        <span class="detail-value amount" id="amount-paid">₵0.00</span>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <i class="fas fa-info-circle"></i>
+      A confirmation email has been sent to your registered email address. Track your order status and expect delivery within 2-3 business days.
+    </div>
+
+    <div class="success-actions">
+      <a href="track-order.html" id="track-order-btn" class="btn-primary-success">
+        <i class="fas fa-truck"></i> Track Your Order Status
+      </a>
+      <a href="index.html#shop" class="btn-outline-success">
+        <i class="fas fa-shopping-bag"></i> Continue Shopping
+      </a>
+      <a href="index.html" class="btn-outline-success">
+        <i class="fas fa-home"></i> Back Home
+      </a>
+    </div>
+
+    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.8rem; color: var(--text-3);">
+      <p>Thank you for shopping with GTL. Your purchase makes a difference through the GTL Foundation.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section footer-section-brand">
+      <div class="footer-logo">GTL<em>.</em></div>
+      <p class="footer-desc">Premium streetwear from Accra</p>
+    </div>
+    <div class="footer-section footer-section-links">
+      <div>
+        <p class="footer-heading">Navigate</p>
+        <nav class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="index.html#shop">Shop</a>
+          <a href="cart.html">Cart</a>
+        </nav>
+      </div>
+      <div>
+        <p class="footer-heading">Contact</p>
+        <div class="footer-contact">
+          <a href="mailto:gtlbrand926@gmail.com" style="font-size:.85rem;color:var(--text-2);transition:color var(--transition);text-decoration:none"><i class="fas fa-envelope" style="margin-right:.4rem"></i>gtlbrand926@gmail.com</a>
+          <a href="https://wa.me/233545089499" target="_blank" rel="noopener noreferrer" style="font-size:.85rem;color:var(--text-2);transition:color var(--transition);text-decoration:none"><i class="fas fa-phone" style="margin-right:.4rem"></i>+233 24 518 4337</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-section footer-section-social">
+      <p class="footer-heading">Follow</p>
+      <div class="footer-social">
+        <a href="https://wa.me/233545089499" target="_blank" rel="noopener noreferrer" title="WhatsApp" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/gtl_brand?igsh=MXFtcjJvYXQ2ODJ3YQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" title="Instagram" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@gtl_brand?_r=1&_t=ZS-94gJl7TErtl" target="_blank" rel="noopener noreferrer" title="TikTok" class="social-icon"><i class="fab fa-tiktok"></i></a>
+        <a href="https://youtube.com/@gtlbrand?si=GMXAETGsE1z_k4t8SS" target="_blank" rel="noopener noreferrer" title="YouTube" class="social-icon"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="footer-bottom"><p>© 2026 GTL Brand, Accra.</p></div>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+<script type="module">
+  import { auth, updateCartBadge } from "./js/firebase.js";
+  import "./js/app.js";
+
+  // Initialize page
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartBadge();
+    loadPaymentDetails();
+  });
+
+  function loadPaymentDetails() {
+    // Get payment details from URL params or sessionStorage
+    const params = new URLSearchParams(window.location.search);
+    
+    const orderId = params.get('orderId') || sessionStorage.getItem('lastOrderId');
+    const transactionRef = params.get('reference') || sessionStorage.getItem('lastTransactionRef');
+    const paymentMethod = params.get('method') || sessionStorage.getItem('lastPaymentMethod');
+    const amount = params.get('amount') || sessionStorage.getItem('lastAmount');
+
+    if (orderId) {
+      document.getElementById('order-id').textContent = orderId.substring(0, 12).toUpperCase();
+      const trackBtn = document.getElementById('track-order-btn');
+      if (trackBtn) trackBtn.href = `track-order.html?orderId=${encodeURIComponent(orderId)}`;
+    }
+    if (transactionRef) document.getElementById('transaction-ref').textContent = transactionRef;
+    if (paymentMethod) document.getElementById('payment-method').textContent = paymentMethod;
+    if (amount) {
+      document.getElementById('amount-paid').textContent = `₵${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    }
+
+    // Clear sessionStorage
+    sessionStorage.removeItem('lastOrderId');
+    sessionStorage.removeItem('lastTransactionRef');
+    sessionStorage.removeItem('lastPaymentMethod');
+    sessionStorage.removeItem('lastAmount');
+  }
+</script>
+</body>
+</html>

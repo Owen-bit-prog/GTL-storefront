@@ -1,0 +1,66 @@
+<!-- ── PUSH NOTIFICATIONS EXAMPLE ──────────────────────────────── -->
+<!-- Add this to index.html or any page to enable notifications -->
+
+<!-- Option 1: Simple Button in Navbar (add to navbar) -->
+<button class="theme-toggle" id="notify-btn" aria-label="Enable notifications" title="Enable notifications" style="margin-left:.4rem">
+  <i class="fas fa-bell"></i>
+</button>
+
+<!-- Option 2: Settings Panel (add to user widget) -->
+<div style="padding:1rem;border-top:1px solid var(--border);margin-top:.5rem">
+  <button class="btn btn-outline btn-sm" id="enable-notifications">
+    <i class="fas fa-bell"></i> Enable Notifications
+  </button>
+</div>
+
+<!-- ── SCRIPT ──────────────────────────────────────────────────── -->
+<script type="module">
+  import { enableNotifications } from "./js/firebase.js";
+
+  // ── Notification Button Handler ──────────────────────────
+  document.getElementById("notify-btn")?.addEventListener("click", async () => {
+    const btn = document.getElementById("notify-btn");
+    btn.disabled = true;
+    btn.style.opacity = "0.5";
+    
+    const token = await enableNotifications();
+    
+    if (token) {
+      btn.style.color = "var(--brand)";
+      btn.title = "✓ Notifications enabled";
+      console.log("Notifications enabled successfully");
+      // Show confirmation toast
+      showToast("Notifications enabled!", "success");
+    } else {
+      btn.style.opacity = "1";
+      btn.disabled = false;
+    }
+  });
+
+  // ── Alternative: Enable on Login ─────────────────────────
+  // Uncomment below to auto-request notifications after user logs in
+  /*
+  import { watchAuth } from "./js/firebase.js";
+  
+  watchAuth(user => {
+    if (user) {
+      // Optionally auto-enable notifications on login
+      // enableNotifications();
+      console.log("User logged in:", user.email);
+    }
+  });
+  */
+
+  // ── Optional: Check if notifications already enabled ─────
+  function checkNotificationStatus() {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        console.log("Notifications already enabled");
+      } else if (Notification.permission !== "denied") {
+        console.log("User can enable notifications");
+      }
+    }
+  }
+
+  checkNotificationStatus();
+</script>

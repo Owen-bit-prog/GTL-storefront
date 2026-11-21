@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GTL Admin — Dashboard</title>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    /* Admin-specific overrides */
+    .admin-wrap{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 68px)}
+    .admin-sidebar{background:var(--bg-2);border-right:1px solid var(--border);padding:2rem 0;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto}
+    .sb-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);padding:.25rem 1.25rem 0.5rem}
+    .sb-link{display:flex;align-items:center;gap:.6rem;padding:.55rem 1.25rem;font-size:.875rem;font-weight:500;color:var(--text-2);border-radius:0;transition:all var(--transition);cursor:pointer;border:none;background:none;width:100%;text-align:left}
+    .sb-link:hover{background:var(--bg-3);color:var(--text)}
+    .sb-link.active{background:var(--brand-ghost);color:var(--brand);border-right:2px solid var(--brand)}
+    .admin-main{padding:2.5rem clamp(1rem,4vw,3rem);overflow-x:hidden}
+    .admin-header{margin-bottom:2.5rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem}
+    .admin-header h1{font-size:1.9rem}
+    .admin-header p{color:var(--text-2);font-size:.875rem;margin-top:.2rem}
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1.1rem;margin-bottom:2.5rem}
+    .stat-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.4rem}
+    .stat-card .lbl{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-2);margin-bottom:.4rem}
+    .stat-card .val{font-family:var(--font-h);font-size:2rem;font-weight:700;color:var(--brand);line-height:1}
+    .stat-card .sub{font-size:.75rem;color:var(--text-3);margin-top:.3rem}
+    .panel{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;margin-bottom:2.5rem}
+    .panel-top{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+    .panel-top h2{font-size:1.1rem}
+    .table-responsive{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .live-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:600;color:var(--success)}
+    .live-badge::before{content:'';width:6px;height:6px;background:var(--success);border-radius:50%;animation:lp 1.6s ease-in-out infinite}
+    @keyframes lp{0%,100%{opacity:1}50%{opacity:.3}}
+    table{width:100%;border-collapse:collapse;min-width:650px}
+    th{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);padding:.75rem 1.1rem;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+    td{padding:.9rem 1.1rem;font-size:.85rem;border-bottom:1px solid var(--border);vertical-align:top}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:rgba(255,255,255,.02)}
+    .status-select{background:var(--bg-3);border:1px solid var(--border);color:var(--text);font-size:.78rem;font-weight:600;padding:.25rem .5rem;border-radius:4px;outline:none;cursor:pointer;transition:border-color var(--transition)}
+    .status-select:focus{border-color:var(--brand)}
+    .search-box{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:.82rem;padding:.42rem .85rem;outline:none;width:200px;transition:border-color var(--transition)}
+    .search-box:focus{border-color:var(--brand)}
+    .prod-grid-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;padding:1.5rem}
+    .prod-card-admin{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-lg);padding:1rem;display:flex;flex-direction:column;gap:.75rem}
+    .prod-card-admin img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r)}
+    @media(max-width:780px){.admin-wrap{grid-template-columns:1fr}.admin-sidebar{display:none}.admin-main{padding:1.5rem 1rem}.search-box{width:100%}}
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────── -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">GTL<em>.</em> <span style="font-size:.7rem;color:var(--text-3);font-family:var(--font-b);font-weight:400;margin-left:.3rem">Admin</span></a>
+  <div class="nav-right">
+    <span id="admin-email" style="font-size:.82rem;color:var(--text-2)"></span>
+    <!-- Theme toggle -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme" style="margin:0 .3rem">
+      <i class="fas fa-moon"></i><span class="theme-toggle-label">Dark</span>
+    </button>
+    <button class="btn-ghost-sm" id="logout-btn" style="margin-left:.75rem">Logout</button>
+  </div>
+</nav>
+
+<!-- ── ADMIN LAYOUT ───────────────────────────────────────── -->
+<div class="admin-wrap">
+  <aside class="admin-sidebar">
+    <p class="sb-label">Dashboard</p>
+    <button class="sb-link active" id="tab-orders-btn"><i class="fas fa-box"></i> Orders</button>
+    <button class="sb-link" id="tab-products-btn"><i class="fas fa-tags"></i> Products</button>
+    <a href="index.html" class="sb-link"><i class="fas fa-store"></i> View Store</a>
+    <div style="height:1px;background:var(--border);margin:.75rem 0"></div>
+    <p class="sb-label">Account</p>
+    <button class="sb-link" id="sidebar-logout"><i class="fas fa-door-open"></i> Logout</button>
+  </aside>
+
+  <main class="admin-main">
+    <!-- ORDERS SECTION -->
+    <div id="section-orders">
+      <div class="admin-header">
+        <div>
+          <h1>Orders Dashboard</h1>
+          <p>Real-time feed from Firestore · <span class="live-badge">Live</span></p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card"><div class="lbl">Total Orders</div><div class="val" id="s-total">—</div><div class="sub">All time</div></div>
+        <div class="stat-card"><div class="lbl">Revenue (₵)</div><div class="val" id="s-revenue">—</div><div class="sub">Sum of all orders</div></div>
+        <div class="stat-card"><div class="lbl">Pending</div><div class="val" id="s-pending">—</div><div class="sub">Awaiting processing</div></div>
+        <div class="stat-card"><div class="lbl">Customers</div><div class="val" id="s-customers">—</div><div class="sub">Unique accounts</div></div>
+      </div>
+
+      <!-- Orders table -->
+      <div class="panel">
+        <div class="panel-top">
+          <h2>All Orders</h2>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+            <span class="live-badge">Live updates</span>
+            <input type="text" id="search" class="search-box" placeholder="Search orders…" autocomplete="off"/>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div id="empty-state" style="text-align:center;padding:4rem 2rem;color:var(--text-2)">
+          <div style="font-size:2.5rem;margin-bottom:.75rem">📭</div>
+          <p>No orders yet. They'll appear here in real time.</p>
+        </div>
+
+        <!-- Table -->
+        <div id="table-wrap" style="display:none;overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>Customer</th><th>Items</th><th>Total (₵)</th><th>Payment</th><th>Status Control</th><th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS SECTION -->
+    <div id="section-products" style="display:none">
+      <div class="admin-header">
+        <div>
+          <h1>Products Catalog</h1>
+          <p>Manage store inventory, prices &amp; drops</p>
+        </div>
+        <button class="btn btn-primary btn-sm" id="add-product-modal-btn"><i class="fas fa-plus" style="margin-right:.4rem"></i> Add New Product</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-top">
+          <h2>Store Inventory (<span id="prod-count">0</span>)</h2>
+        </div>
+        <div id="admin-prod-grid" class="prod-grid-admin">
+          <p style="color:var(--text-2)">Loading products…</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ── ADD PRODUCT MODAL ────────────────────────────────────── -->
+<div class="edit-modal" id="prod-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:1rem">
+  <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-xl);padding:2rem;max-width:500px;width:100%">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <h2 style="font-size:1.2rem" id="prod-modal-title">Add New Product</h2>
+      <button id="close-prod-modal-btn" style="color:var(--text-2);font-size:1.2rem">✕</button>
+    </div>
+    <form id="prod-form">
+      <input type="hidden" id="p-id"/>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label class="form-label">Product Name</label>
+        <input type="text" class="form-input" id="p-name" placeholder="GTL Hoodie" required/>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div class="form-group">
+          <label class="form-label">Price (₵)</label>
+          <input type="number" class="form-input" id="p-price" placeholder="150" required min="1"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input" id="p-cat" required style="background:var(--dark-3)">
+            <option value="shirts">Shirts</option>
+            <option value="caps">Caps</option>
+            <option value="crop-tops">Crop Tops</option>
+            <option value="hoodies">Hoodies</option>
+            <option value="shorts">Shorts</option>
+            <option value="skull-caps">Skull Caps</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label class="form-label">Badge (Optional)</label>
+        <input type="text" class="form-input" id="p-badge" placeholder="e.g. New Drop, Limited, Best Seller"/>
+      </div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label class="form-label">Image URL</label>
+        <input type="url" class="form-input" id="p-imageURL" placeholder="https://images.unsplash.com/..." required/>
+      </div>
+      <div class="form-group" style="margin-bottom:1.5rem">
+        <label class="form-label">Description</label>
+        <textarea class="form-input" id="p-desc" rows="3" placeholder="Brief description of product fit and material..." required style="resize:vertical"></textarea>
+      </div>
+      <div style="display:flex;gap:1rem">
+        <button type="submit" class="btn btn-primary" style="flex:1" id="save-prod-btn">Save Product</button>
+        <button type="button" class="btn btn-outline" id="cancel-prod-btn" style="flex:1">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+<script type="module">
+  import { auth, db, showToast, isAdminUser } from "./js/firebase.js";
+  import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { collection, query, orderBy, onSnapshot, doc, updateDoc, addDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ── Admin Guard ───────────────────────────────────────────
+  onAuthStateChanged(auth, user => {
+    if (!user || !isAdminUser(user)) {
+      window.location.href = "login.html";
+      return;
+    }
+    localStorage.setItem("role", "admin");
+    document.getElementById("admin-email").textContent = user.email;
+    startDashboard();
+    startProductsView();
+  });
+
+  // ── Logout ────────────────────────────────────────────────
+  const doLogout = () => {
+    localStorage.removeItem("role");
+    signOut(auth).then(() => window.location.href = "login.html");
+  };
+  document.getElementById("logout-btn").addEventListener("click", doLogout);
+  document.getElementById("sidebar-logout").addEventListener("click", doLogout);
+
+  // ── Sidebar Tabs ──────────────────────────────────────────
+  const tabOrdersBtn   = document.getElementById("tab-orders-btn");
+  const tabProductsBtn = document.getElementById("tab-products-btn");
+  const sectionOrders   = document.getElementById("section-orders");
+  const sectionProducts = document.getElementById("section-products");
+
+  tabOrdersBtn?.addEventListener("click", () => {
+    tabOrdersBtn.classList.add("active");
+    tabProductsBtn.classList.remove("active");
+    sectionOrders.style.display = "block";
+    sectionProducts.style.display = "none";
+  });
+
+  tabProductsBtn?.addEventListener("click", () => {
+    tabProductsBtn.classList.add("active");
+    tabOrdersBtn.classList.remove("active");
+    sectionOrders.style.display = "none";
+    sectionProducts.style.display = "block";
+  });
+
+  // ── Live orders stream ────────────────────────────────────
+  let allOrders = [];
+
+  function startDashboard() {
+    const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+    onSnapshot(q, snap => {
+      allOrders = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      updateStats(allOrders);
+      renderTable(allOrders);
+    }, err => {
+      console.warn("Orders live stream fallback:", err.message);
+    });
+  }
+
+  // ── Stats ─────────────────────────────────────────────────
+  function updateStats(orders) {
+    document.getElementById("s-total").textContent    = orders.length;
+    document.getElementById("s-revenue").textContent  = orders.reduce((s,o) => s+(o.total||0), 0).toLocaleString();
+    document.getElementById("s-pending").textContent  = orders.filter(o => (o.status||"pending")==="pending" || (o.status||"")==="confirmed").length;
+    document.getElementById("s-customers").textContent= new Set(orders.map(o=>o.customerUid)).size;
+  }
+
+  // ── Orders Table render ───────────────────────────────────
+  function renderTable(orders) {
+    const empty = document.getElementById("empty-state");
+    const wrap  = document.getElementById("table-wrap");
+    const tbody = document.getElementById("orders-tbody");
+
+    if (orders.length === 0) { empty.style.display="block"; wrap.style.display="none"; return; }
+    empty.style.display = "none";
+    wrap.style.display  = "block";
+
+    tbody.innerHTML = orders.map((o, i) => {
+      const items = (o.items||[]).map(it=>`${it.qty}× ${it.productName}`).join(", ") || (o.productName||"—");
+      const status = (o.status || "confirmed").toLowerCase();
+      const statusOptions = ["confirmed", "processing", "shipped", "delivered", "cancelled"];
+
+      return `<tr>
+        <td style="color:var(--text-3);font-size:.75rem">#${String(orders.length - i).padStart(3,"0")}</td>
+        <td>
+          <div style="font-weight:600">${esc(o.customerName||"—")}</div>
+          <div style="font-size:.75rem;color:var(--text-2)">${esc(o.customerEmail||"")}</div>
+        </td>
+        <td style="max-width:200px;white-space:normal;font-size:.8rem;color:var(--text-2)">${esc(items)}</td>
+        <td style="font-family:var(--font-h);color:var(--brand)">₵${(o.total||0).toLocaleString()}</td>
+        <td style="font-size:.78rem;color:var(--text-2)">${esc(o.paymentMethod||"Manual")}</td>
+        <td>
+          <select class="status-select" data-id="${o.id}">
+            ${statusOptions.map(opt => `<option value="${opt}" ${opt === status ? 'selected' : ''}>${opt.toUpperCase()}</option>`).join("")}
+          </select>
+        </td>
+        <td style="color:var(--text-2);font-size:.78rem;white-space:nowrap">${fmt(o.timestamp)}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  // Handle status update
+  document.getElementById("orders-tbody")?.addEventListener("change", async e => {
+    const select = e.target.closest(".status-select");
+    if (!select) return;
+    const orderId = select.dataset.id;
+    const newStatus = select.value;
+    select.disabled = true;
+
+    try {
+      await updateDoc(doc(db, "orders", orderId), { status: newStatus });
+      showToast(`Order status updated to ${newStatus.toUpperCase()}`, "success");
+    } catch(err) {
+      console.error("Status update error:", err);
+      showToast("Failed to update status: " + err.message, "error");
+    } finally {
+      select.disabled = false;
+    }
+  });
+
+  // ── Search Orders ─────────────────────────────────────────
+  document.getElementById("search").addEventListener("input", e => {
+    const q = e.target.value.toLowerCase();
+    renderTable(q
+      ? allOrders.filter(o =>
+          (o.customerName||"").toLowerCase().includes(q) ||
+          (o.customerEmail||"").toLowerCase().includes(q) ||
+          (o.items||[]).some(it=>(it.productName||"").toLowerCase().includes(q)))
+      : allOrders);
+  });
+
+  // ── Products Management ───────────────────────────────────
+  let allProductsAdmin = [];
+
+  function startProductsView() {
+    onSnapshot(collection(db, "products"), snap => {
+      allProductsAdmin = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAdminProducts(allProductsAdmin);
+    });
+  }
+
+  function renderAdminProducts(products) {
+    const grid = document.getElementById("admin-prod-grid");
+    document.getElementById("prod-count").textContent = products.length;
+
+    if (products.length === 0) {
+      grid.innerHTML = `<p style="color:var(--text-2);grid-column:1/-1;text-align:center;padding:3rem 0">No products in store database. Click 'Add New Product' to create one!</p>`;
+      return;
+    }
+
+    grid.innerHTML = products.map(p => `
+      <div class="prod-card-admin">
+        <img src="${p.imageURL}" alt="${p.name}" loading="lazy"/>
+        <div style="flex:1">
+          <span style="font-size:.72rem;color:var(--brand);font-weight:700;text-transform:uppercase">${esc(p.category||'GTL')}</span>
+          <h3 style="font-size:.95rem;margin-top:.2rem">${esc(p.name)}</h3>
+          <p style="font-weight:700;color:var(--brand);margin-top:.3rem">₵${p.price}</p>
+          ${p.badge ? `<span style="font-size:.65rem;background:var(--brand);color:#000;padding:.1rem .4rem;border-radius:4px;font-weight:800">${esc(p.badge)}</span>` : ''}
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn btn-outline btn-sm edit-prod-btn" data-id="${p.id}" style="flex:1;font-size:.78rem"><i class="fas fa-pen"></i> Edit</button>
+          <button class="btn btn-dark btn-sm del-prod-btn" data-id="${p.id}" style="font-size:.78rem;color:var(--danger)"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // Add / Edit Product Modal Logic
+  const prodModal = document.getElementById("prod-modal");
+  const prodForm  = document.getElementById("prod-form");
+
+  document.getElementById("add-product-modal-btn").addEventListener("click", () => {
+    document.getElementById("prod-modal-title").textContent = "Add New Product";
+    document.getElementById("p-id").value = "";
+    prodForm.reset();
+    prodModal.style.display = "flex";
+  });
+
+  document.getElementById("close-prod-modal-btn").addEventListener("click", () => prodModal.style.display = "none");
+  document.getElementById("cancel-prod-btn").addEventListener("click", () => prodModal.style.display = "none");
+
+  // Grid actions (Edit/Delete)
+  document.getElementById("admin-prod-grid").addEventListener("click", async e => {
+    const editBtn = e.target.closest(".edit-prod-btn");
+    if (editBtn) {
+      const p = allProductsAdmin.find(item => item.id === editBtn.dataset.id);
+      if (!p) return;
+      document.getElementById("prod-modal-title").textContent = "Edit Product";
+      document.getElementById("p-id").value = p.id;
+      document.getElementById("p-name").value = p.name || "";
+      document.getElementById("p-price").value = p.price || "";
+      document.getElementById("p-cat").value = p.category || "shirts";
+      document.getElementById("p-badge").value = p.badge || "";
+      document.getElementById("p-imageURL").value = p.imageURL || "";
+      document.getElementById("p-desc").value = p.description || "";
+      prodModal.style.display = "flex";
+      return;
+    }
+
+    const delBtn = e.target.closest(".del-prod-btn");
+    if (delBtn) {
+      if (confirm("Delete this product from Firestore?")) {
+        try {
+          await deleteDoc(doc(db, "products", delBtn.dataset.id));
+          showToast("Product deleted ✓", "info");
+        } catch(err) {
+          showToast("Error deleting product: " + err.message, "error");
+        }
+      }
+    }
+  });
+
+  // Submit Product Form
+  prodForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const id = document.getElementById("p-id").value;
+    const name = document.getElementById("p-name").value.trim();
+    const price = Number(document.getElementById("p-price").value);
+    const category = document.getElementById("p-cat").value;
+    const badge = document.getElementById("p-badge").value.trim() || null;
+    const imageURL = document.getElementById("p-imageURL").value.trim();
+    const description = document.getElementById("p-desc").value.trim();
+
+    const payload = { name, price, category, badge, imageURL, description };
+    const submitBtn = document.getElementById("save-prod-btn");
+    submitBtn.disabled = true;
+
+    try {
+      if (id) {
+        await updateDoc(doc(db, "products", id), payload);
+        showToast("Product updated ✓", "success");
+      } else {
+        await addDoc(collection(db, "products"), payload);
+        showToast("Product added ✓", "success");
+      }
+      prodModal.style.display = "none";
+      prodForm.reset();
+    } catch(err) {
+      console.error("Save product error:", err);
+      showToast("Error saving product: " + err.message, "error");
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  // ── Helpers ───────────────────────────────────────────────
+  function fmt(ts) {
+    if (!ts) return "—";
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString("en-GB", {day:"numeric",month:"short",year:"numeric"}) + " " +
+           d.toLocaleTimeString("en-GB", {hour:"2-digit",minute:"2-digit"});
+  }
+  function esc(s) {
+    return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+</script>
+</body>
+</html>

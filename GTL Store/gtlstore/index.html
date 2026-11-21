@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="description" content="GTL Store — Premium streetwear from Accra, Ghana."/>
+  <title>GTL Store — Accra Streetwear</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ── PAGE LOADER ─────────────────────────────────────────── -->
+<div class="page-loader" id="page-loader"><div class="loader-logo">GTL.</div></div>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────── -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo">GTL<em>.</em></a>
+
+  <div class="nav-center">
+    <a href="index.html"  class="nav-link active">Home</a>
+    <a href="index.html#shop" class="nav-link">Shop</a>
+    <a href="track-order.html" class="nav-link">Track Order</a>
+    <a href="cart.html"   class="nav-link">Cart</a>
+  </div>
+
+  <div class="nav-right">
+    <!-- Wishlist -->
+    <a href="cart.html#wishlist" class="nav-cart nav-wishlist" aria-label="Wishlist" title="View Wishlist">
+      <i class="fas fa-heart"></i> <span class="wishlist-badge" aria-live="polite">0</span>
+    </a>
+    <!-- Cart -->
+    <a href="cart.html" class="nav-cart" aria-label="Shopping cart">
+      <i class="fas fa-shopping-cart"></i> <span class="cart-badge" aria-live="polite">0</span>
+    </a>
+    <!-- Theme toggle -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+      <i class="fas fa-moon"></i><span class="theme-toggle-label">Dark</span>
+    </button>
+    <!-- Auth: logged out -->
+    <a href="login.html" class="nav-login-btn nav-login-link" id="nav-login-link">Login</a>
+    <!-- Auth: logged in -->
+    <div class="nav-user-widget hidden" id="nav-user-widget">
+      <div class="nav-avatar" id="nav-avatar">[ G ]</div>
+      <button class="btn-ghost-sm" id="nav-logout-btn">Logout</button>
+    </div>
+    <!-- Burger (mobile) -->
+    <button class="burger" id="burger-btn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="mobile-overlay" id="mobile-overlay"></div>
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="index.html"       class="nav-link">Home</a>
+  <a href="index.html#shop"  class="nav-link">Shop</a>
+  <a href="track-order.html" class="nav-link">Track Order</a>
+  <a href="cart.html"        class="nav-link">Cart</a>
+  <a href="login.html"       class="nav-link">Login / Account</a>
+</nav>
+
+<!-- ── HERO ───────────────────────────────────────────────── -->
+<section class="hero" aria-label="Hero banner">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines" aria-hidden="true"></div>
+
+  <span class="hero-tag">Crafted in Accra</span>
+  <h1>
+    Dress the
+    <span class="line-accent">Streets.</span>
+  </h1>
+  <p class="hero-sub">
+    Premium streetwear built for the world.
+    Thoughtful design. Quiet quality. Every day.
+  </p>
+  <div class="hero-actions">
+    <a href="#shop" class="btn btn-primary btn-lg">Shop Now</a>
+    <a href="#about" class="btn btn-outline btn-lg">Our Story</a>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">Scroll</div>
+</section>
+
+
+
+<!-- ── SHOP SECTION ────────────────────────────────────── -->
+<section class="section section--bordered" id="shop">
+  <div class="section-head section-head--row">
+    <div>
+      <p class="section-eyebrow">Spring 2026</p>
+      <h2 class="section-title">New Collection</h2>
+      <p class="section-sub">Everything you need to move with purpose.</p>
+    </div>
+    <a href="#shop" class="btn btn-outline btn-sm">View All</a>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs" id="filter-tabs" role="tablist">
+    <button class="filter-tab active" data-cat="all" role="tab">All</button>
+    <button class="filter-tab" data-cat="shirts" role="tab">Shirts</button>
+    <button class="filter-tab" data-cat="caps" role="tab">Caps</button>
+    <button class="filter-tab" data-cat="crop-tops" role="tab">Crop Tops</button>
+    <button class="filter-tab" data-cat="hoodies" role="tab">Hoodies</button>
+    <button class="filter-tab" data-cat="shorts" role="tab">Shorts</button>
+    <button class="filter-tab" data-cat="skull-caps" role="tab">Skull Caps</button>
+  </div>
+
+  <!-- Product grid: skeleton placeholders shown while loading -->
+  <div class="products-grid" id="products-grid">
+    <!-- Skeleton cards -->
+    <div class="product-card" id="sk1">
+      <div class="skeleton" style="aspect-ratio:3/4"></div>
+      <div style="padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem">
+        <div class="skeleton" style="height:12px;width:60%;border-radius:4px"></div>
+        <div class="skeleton" style="height:16px;width:85%;border-radius:4px"></div>
+        <div class="skeleton" style="height:12px;border-radius:4px"></div>
+        <div class="skeleton" style="height:12px;width:75%;border-radius:4px"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:.5rem">
+          <div class="skeleton" style="height:22px;width:60px;border-radius:4px"></div>
+          <div class="skeleton" style="height:34px;width:90px;border-radius:8px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="product-card" id="sk2" style="opacity:.8">
+      <div class="skeleton" style="aspect-ratio:3/4"></div>
+      <div style="padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem">
+        <div class="skeleton" style="height:12px;width:50%;border-radius:4px"></div>
+        <div class="skeleton" style="height:16px;width:80%;border-radius:4px"></div>
+        <div class="skeleton" style="height:12px;border-radius:4px"></div>
+        <div class="skeleton" style="height:12px;width:65%;border-radius:4px"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:.5rem">
+          <div class="skeleton" style="height:22px;width:60px;border-radius:4px"></div>
+          <div class="skeleton" style="height:34px;width:90px;border-radius:8px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="product-card" id="sk3" style="opacity:.6">
+      <div class="skeleton" style="aspect-ratio:3/4"></div>
+      <div style="padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem">
+        <div class="skeleton" style="height:12px;width:55%;border-radius:4px"></div>
+        <div class="skeleton" style="height:16px;width:90%;border-radius:4px"></div>
+        <div class="skeleton" style="height:12px;border-radius:4px"></div>
+        <div class="skeleton" style="height:12px;width:70%;border-radius:4px"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:.5rem">
+          <div class="skeleton" style="height:22px;width:60px;border-radius:4px"></div>
+          <div class="skeleton" style="height:34px;width:90px;border-radius:8px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ─────────────────────────────────────────────── -->
+<section class="section section--bordered" id="about">
+  <div style="max-width:640px">
+    <p class="section-eyebrow">About GTL</p>
+    <h2 class="section-title">Built Different.<br>Born in Accra.</h2>
+    <p style="color:var(--text-2);margin-top:1.1rem;line-height:1.85;font-size:.95rem">
+      GTL Brand started as a vision — goods that mirror the raw energy of Accra's streets.
+      Every product is thoughtfully designed for those who move with purpose.
+      We make everyday essentials that speak without shouting.
+    </p>
+    <div style="display:flex;gap:3rem;flex-wrap:wrap;margin-top:2.5rem">
+      <div>
+        <div style="font-family:var(--font-h);font-size:2.5rem;font-weight:700;color:var(--brand)">2025</div>
+        <div style="color:var(--text-2);font-size:.82rem;margin-top:.2rem">Founded</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-h);font-size:2.5rem;font-weight:700;color:var(--brand)">500+</div>
+        <div style="color:var(--text-2);font-size:.82rem;margin-top:.2rem">Happy Customers</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-h);font-size:2.5rem;font-weight:700;color:var(--brand)">GH</div>
+        <div style="color:var(--text-2);font-size:.82rem;margin-top:.2rem">Local &amp; Proud</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-content">
+    <!-- Left: Branding -->
+    <div class="footer-section footer-section-brand">
+      <div class="footer-logo">GTL<em>.</em></div>
+      <p class="footer-desc">Premium streetwear from Accra</p>
+    </div>
+
+    <!-- Center: Navigation & Contact -->
+    <div class="footer-section footer-section-links">
+      <div>
+        <p class="footer-heading">Navigate</p>
+        <nav class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="#shop">Shop</a>
+          <a href="cart.html">Cart</a>
+          <a href="login.html">Account</a>
+        </nav>
+      </div>
+      <div>
+        <p class="footer-heading">Contact</p>
+        <div class="footer-contact">
+          <a href="mailto:gtlbrand926@gmail.com" style="font-size:.85rem;color:var(--text-2);transition:color var(--transition);text-decoration:none"><i class="fas fa-envelope" style="margin-right:.4rem"></i>gtlbrand926@gmail.com</a>
+          <a href="https://wa.me/233545089499" target="_blank" rel="noopener noreferrer" style="font-size:.85rem;color:var(--text-2);transition:color var(--transition);text-decoration:none"><i class="fas fa-phone" style="margin-right:.4rem"></i>+233 24 518 4337</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Social Media -->
+    <div class="footer-section footer-section-social">
+      <p class="footer-heading">Follow</p>
+      <div class="footer-social">
+        <a href="https://wa.me/233545089499" target="_blank" rel="noopener noreferrer" title="WhatsApp" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/gtl_brand?igsh=MXFtcjJvYXQ2ODJ3YQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" target="_blank" rel="noopener noreferrer" title="Instagram" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@gtl_brand?_r=1&_t=ZS-94gJl7TErtl" target="_blank" rel="noopener noreferrer" title="TikTok" class="social-icon"><i class="fab fa-tiktok"></i></a>
+        <a href="https://youtube.com/@gtlbrand?si=GMXAETGsE1z_k4t8SS" target="_blank" rel="noopener noreferrer" title="YouTube" class="social-icon"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2026 GTL Brand, Accra. All rights reserved.</p>
+  <p>Believe in something greater</p>
+</div>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+<script type="module">
+  import { db, addToCart, updateCartBadge, showToast, isWishlisted, toggleWishlist } from "./js/firebase.js";
+  import { collection, getDocs, query, orderBy }      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import "./js/app.js";
+
+  // ── Page loader ──────────────────────────────────────────
+  window.addEventListener("load", () => {
+    document.getElementById("page-loader").classList.add("done");
+    setTimeout(() => document.getElementById("page-loader").remove(), 500);
+  });
+
+  // ── Load products from Firestore ──────────────────────────
+  let allProducts = [];
+
+  async function loadProducts() {
+    try {
+      const snap = await getDocs(collection(db, "products"));
+
+      if (snap.empty) {
+        // Fallback: show static products if Firestore is empty
+        allProducts = STATIC_PRODUCTS;
+      } else {
+        const CLOTHING_CATEGORIES = ["shirts", "caps", "crop-tops", "hoodies", "shorts", "skull-caps"];
+        allProducts = snap.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(p => CLOTHING_CATEGORIES.includes((p.category || "").toString().toLowerCase()))
+          .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+        if (allProducts.length === 0) {
+          allProducts = STATIC_PRODUCTS;
+        }
+      }
+      renderProducts(allProducts);
+    } catch (err) {
+      console.warn("Firestore unavailable, using static products:", err.message);
+      allProducts = STATIC_PRODUCTS;
+      renderProducts(allProducts);
+    }
+  }
+
+  // Attach single delegated listener once on setup
+  document.getElementById("products-grid")?.addEventListener("click", handleGridClick);
+
+  function renderProducts(products) {
+    const grid = document.getElementById("products-grid");
+    // Clear skeletons
+    grid.innerHTML = "";
+
+    if (products.length === 0) {
+      grid.innerHTML = `<p style="color:var(--text-2);padding:3rem 0">No products found.</p>`;
+      return;
+    }
+
+    products.forEach((p, i) => {
+      const wishActive = isWishlisted(p.id);
+      const card = document.createElement("article");
+      card.className = "product-card";
+      card.style.animationDelay = `${i * 50}ms`;
+      card.setAttribute("data-cat", p.category || "all");
+      card.innerHTML = `
+        <div class="product-card__img-wrap">
+          <img src="${p.imageURL}" alt="${p.name}" loading="lazy" width="400" height="533"/>
+          ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ""}
+          <button class="product-card__wishlist-btn ${wishActive ? 'active' : ''}"
+            data-id="${p.id}"
+            data-name="${p.name}"
+            data-price="${p.price}"
+            data-cat="${p.category || ''}"
+            data-img="${p.imageURL}"
+            data-desc="${p.description}"
+            title="${wishActive ? 'Remove from Wishlist' : 'Add to Wishlist'}">
+            <i class="${wishActive ? 'fas fa-heart' : 'far fa-heart'}"></i>
+          </button>
+          <div class="product-card__quick-add">
+            <button class="btn btn-primary btn-sm btn-full add-btn"
+              data-id="${p.id}"
+              data-name="${p.name}"
+              data-price="${p.price}"
+              data-cat="${p.category || ''}"
+              data-img="${p.imageURL}"
+              data-desc="${p.description}">
+              + Add to Cart
+            </button>
+          </div>
+        </div>
+        <div class="product-card__body">
+          <span class="product-card__category">${p.category || "GTL"}</span>
+          <h3 class="product-card__name">${p.name}</h3>
+          <p class="product-card__desc">${p.description}</p>
+          <div class="product-card__footer">
+            <span class="product-card__price"><sub>₵</sub>${p.price}</span>
+            <button class="btn btn-primary btn-sm add-btn"
+              data-id="${p.id}"
+              data-name="${p.name}"
+              data-price="${p.price}"
+              data-cat="${p.category || ''}"
+              data-img="${p.imageURL}"
+              data-desc="${p.description}">
+              Add to Cart
+            </button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function handleGridClick(e) {
+    const wishBtn = e.target.closest(".product-card__wishlist-btn");
+    if (wishBtn) {
+      e.stopPropagation();
+      const product = {
+        id: wishBtn.dataset.id,
+        name: wishBtn.dataset.name,
+        price: Number(wishBtn.dataset.price),
+        category: wishBtn.dataset.cat,
+        imageURL: wishBtn.dataset.img,
+        description: wishBtn.dataset.desc
+      };
+      const added = toggleWishlist(product);
+      const icon = wishBtn.querySelector("i");
+      if (added) {
+        wishBtn.classList.add("active");
+        wishBtn.title = "Remove from Wishlist";
+        icon.className = "fas fa-heart";
+      } else {
+        wishBtn.classList.remove("active");
+        wishBtn.title = "Add to Wishlist";
+        icon.className = "far fa-heart";
+      }
+      return;
+    }
+
+    const btn = e.target.closest(".add-btn");
+    if (!btn) return;
+    addToCart({
+      id:       btn.dataset.id,
+      name:     btn.dataset.name,
+      price:    Number(btn.dataset.price),
+      category: btn.dataset.cat,
+      imageURL: btn.dataset.img,
+      description: btn.dataset.desc,
+    });
+    // Visual feedback on button
+    const original = btn.textContent;
+    btn.textContent = "✓ Added!";
+    btn.disabled = true;
+    setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500);
+  }
+
+  // ── Filter tabs ──────────────────────────────────────────
+  document.getElementById("filter-tabs").addEventListener("click", e => {
+    const tab = e.target.closest(".filter-tab");
+    if (!tab) return;
+    document.querySelectorAll(".filter-tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    const cat = tab.dataset.cat;
+    const filtered = cat === "all" ? allProducts : allProducts.filter(p => p.category === cat);
+    renderProducts(filtered);
+  });
+
+  // ── Static fallback products (used when Firestore is empty) ─
+  const STATIC_PRODUCTS = [
+    { id:"s1", name:"GTL Oversized Shirt",   price:120, category:"shirts",     badge:"New Drop",   description:"Boxy cotton shirt with soft hand feel and relaxed fit.",                       imageURL:"https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&q=80" },
+    { id:"s2", name:"GTL Skull Cap",         price:65,  category:"skull-caps", badge:"Best Seller",description:"Ribbed acrylic skull cap with snug fit for everyday layering.",                 imageURL:"https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80" },
+    { id:"s3", name:"GTL Crop Top",          price:90,  category:"crop-tops", badge:"Limited",    description:"Cropped cotton top with contrast stitch detail and bold GTL branding.",      imageURL:"https://images.unsplash.com/photo-1520975913232-8c45738fd255?w=800&q=80" },
+    { id:"s4", name:"GTL Sport Hoodie",      price:220, category:"hoodies",    badge:"Hot",        description:"Brushed fleece hoodie with oversized hood and hidden kangaroo pocket.",         imageURL:"https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&q=80" },
+    { id:"s5", name:"GTL Street Shorts",     price:160, category:"shorts",     badge:null,         description:"Utility-inspired shorts with elastic waist and tonal embroidery.",                imageURL:"https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&q=80" },
+    { id:"s6", name:"GTL Graphic Tee",       price:80,  category:"shirts",     badge:"On Sale",   description:"Soft jersey tee with graphic front print and vintage wash.",                    imageURL:"https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&q=80" },
+    { id:"s7", name:"GTL Trucker Cap",       price:70,  category:"caps",       badge:null,         description:"Structured trucker cap with adjustable snapback and woven label.",              imageURL:"https://images.unsplash.com/photo-1518541230616-92c768c3f797?w=800&q=80" },
+    { id:"s8", name:"GTL Corded Skull Cap",  price:68,  category:"skull-caps", badge:null,         description:"Thick corded skull cap with street-ready fit and premium finish.",                imageURL:"https://images.unsplash.com/photo-1518675291790-290a1c4d21d6?w=800&q=80" },
+  ];
+
+  // Kick off
+  loadProducts();
+</script>
+</body>
+</html>
